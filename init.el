@@ -45,6 +45,7 @@
 (global-set-key (kbd "C-; C-s") 'magit-status)
 (global-set-key (kbd "C-; C-u") 'magit-pull)
 (global-set-key (kbd "C-; C-i") 'magit-init)
+(global-set-key (kbd "C-; C-m") 'magit-merge)
 
 ;;;; MOVEMENT/CONVENIENCE
 (global-set-key (kbd "M-;") 'comment-or-uncomment-region)
