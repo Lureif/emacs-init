@@ -1,5 +1,5 @@
 # EMACS-INIT
-My mid-tier emacs config that won't be perfect untill I have a beard.\
+My mid-tier Emacs config that won't be perfect untill I have a beard.\
 It will obviously get thicker with time (the init file, not the beard).
 
 ## What's in there?
