@@ -34,6 +34,10 @@
 (defvar inferior-lisp-program "sbcl")
 (setq inhibit-startup-message t
       initial-buffer-choice 'eshell)
+(fset 'yes-or-no-p 'y-or-n-p)
+;; load my elisp files
+
+(load (concat user-emacs-directory "myelfun.el"))
 
 ;;; Themes
 (load-theme 'dracula t)		;; dark purple (a little cringe)
@@ -46,18 +50,22 @@
 ;;(load-theme 'base16-3024)		;; black and grey
 ;;(load-theme 'base16-icy)		;; dark blue
 ;;(load-theme 'base16-cupcake)		;; purple-ish white (v good)
+;;(select-theme)
 
-
-;;; Movement stuff
+;;; Movement and editing stuff
+;; Editing
 (global-set-key (kbd "M-;") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c C-c") 'comment-line)
+(global-set-key (kbd "M-$") 'query-replace)
+(global-set-key (kbd "C-x p") 'parenthesize)
+;; Movement
 (global-set-key (kbd "C-x C-j") 'ace-jump-mode)
 (global-set-key (kbd "C-x C-l") 'ace-jump-line-mode)
 (global-set-key (kbd "C-x o") 'ace-window)
+;; misc
 (global-set-key (kbd "C-c C-e C-b") 'eval-buffer)
-(global-set-key (kbd "M-$") 'query-replace)
 (global-unset-key (kbd "C-; \?t"))
-(fset 'yes-or-no-p 'y-or-n-p)
+
 
 ;;; Plugins
 
@@ -90,16 +98,10 @@
 (use-package company
   :ensure t
   :config (global-company-mode))
-  ;; (company-clang t)
-  ;; (company-elisp t)
-  ;; (company-yasnippet t))
+
 (use-package flycheck
   :ensure t
   :config (global-flycheck-mode))
-
-;; (use-package yasnippet
-;;   :ensure t
-;;   :config (yas-global-mode t))
 
 (use-package yasnippet
 	     :ensure t
@@ -131,6 +133,10 @@
 	 ("C-c C-s" . 'org-journal-search))
   :config
   (setq org-journal-dir "~/.org/journal"))
+
+;;; Cider
+(use-package cider
+  :ensure t)
 
 ;;;; transparency!
 ;; (set-frame-parameter (selected-frame) 'alpha '(85 85))
