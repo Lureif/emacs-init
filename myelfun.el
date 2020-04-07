@@ -24,6 +24,20 @@
   (forward-word)
   (forward-word)
   (backward-word))
+
+(defun run-game ()
+  "Run the Play script with the argument provided by the user when promped.
+   It is to be noted that Emacs will only be useable again when the game has been quit."
+  (interactive)
+  (let ((script "~/scripts/play.sh")
+	(choices '(("g" 1) ("m" 2) ("i" 3) ("p" 4) ("d" 5))))
+    (let ((user-choice (completing-read
+			"[g]oose [m]inecraft [i]saac [p]sx [d]warffortreess : " choices nil t "")))
+      (cond ((string= user-choice "m") (shell-command (concat script " minecraft") nil nil))
+	    ((string= user-choice "g") (shell-command (concat script " goose") nil nil))
+	    ((string= user-choice "i") (shell-command (concat script " isaac") nil nil))
+	    ((string= user-choice "d") (shell-command (concat script " dwarffortress") nil nil))
+	    ((string= user-choice "p") (shell-command (concat script " psx") nil nil))))))
 ;;;--------------------------------------------------
 
 (provide 'myelfun)
