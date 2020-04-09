@@ -6,7 +6,7 @@
 ;;; Code:
 
 (defvar light-theme 'gruvbox-light-soft)
-(defvar dark-theme 'dracula)
+(defvar dark-theme 'gruvbox-dark-hard)
 
 (defun select-theme ()
   "Asks the user if they want to load a light theme."
@@ -26,7 +26,7 @@
   (backward-word))
 
 (defun run-game ()
-  "Run the Play script with the argument provided by the user when promped.
+  "Run the Play script with the argument provided by the user when prompted.
    It is to be noted that Emacs will only be useable again when the game has been quit."
   (interactive)
   (let ((script "~/scripts/play.sh")
@@ -36,8 +36,9 @@
       (cond ((string= user-choice "m") (shell-command (concat script " minecraft") nil nil))
 	    ((string= user-choice "g") (shell-command (concat script " goose") nil nil))
 	    ((string= user-choice "i") (shell-command (concat script " isaac") nil nil))
-	    ((string= user-choice "d") (shell-command (concat script " dwarffortress") nil nil))
+	    ((string= user-choice "d") (shell-command (concat script " dwarf") nil nil))
 	    ((string= user-choice "p") (shell-command (concat script " psx") nil nil))))))
+
 ;;;--------------------------------------------------
 
 (provide 'myelfun)
