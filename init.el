@@ -67,7 +67,8 @@
 ;;; --------------------------------------------------
 ;;; Themes
 ;;; --------------------------------------------------
-(load-theme 'base16-spacemacs t)
+;;(load-theme 'base16-spacemacs t)
+(load-theme 'minsk t)
 ;;(load-theme 'base16-pop t)		;; v dark much blackness
 ;;(load-theme 'base16-rebecca)		;; purple
 ;;(load-theme 'base16-cupcake)		;; purple-ish + white (v kawaii)
@@ -78,6 +79,7 @@
 ;;; --------------------------------------------------
 ;;; Editing
 ;;; --------------------------------------------------
+
 (global-set-key (kbd "M-;")	'comment-or-uncomment-region)
 (global-set-key (kbd "C-c C-c") 'comment-line)
 (global-set-key (kbd "M-$") 	'query-replace)
@@ -85,17 +87,25 @@
 ;;; --------------------------------------------------
 ;;; Movement
 ;;; --------------------------------------------------
+;; --- setting
+
 (global-set-key (kbd "C-x j") 'ace-jump-mode)
 (global-set-key (kbd "C-x l") 'ace-jump-line-mode)
 (global-set-key (kbd "C-x o") 'ace-window)
+(global-set-key (kbd "M-3")   'point-to-register)
+(global-set-key (kbd "C-3")   'jump-to-register)
+
+;;; ---------------------------------------------------
+;; --- unsetting
+
+(global-unset-key (kbd "C-x r SPC"))
+(global-unset-key (kbd "C-x r j"))
+;; c-u c-spc jumps.
 
 ;;; --------------------------------------------------
-;;; misc
+;;;; Misc
 ;;; --------------------------------------------------
 (global-set-key (kbd "C-c C-e C-b") 'eval-buffer)
-(global-set-key (kbd "M-#") 	    'eshell)
-(global-set-key (kbd "M-3") 	    'next-buffer)
-(global-set-key (kbd "C-3")	    'previous-buffer)
 (global-set-key (kbd "C-c C-x C-q") (lambda () (interactive) (kill-emacs)))
 
 ;;; --------------------------------------------------
@@ -106,11 +116,30 @@
 ;;; --------------------------------------------------
 ;;;; Plugins
 ;;; --------------------------------------------------
+(use-package basic-c-compile
+  :ensure t
+  :bind (("C-c C-m C-m" . 'basic-c-compile-makefile) ;; should output message. message in lambda?
+	 ("C-c C-m C-c" . 'basic-c-compile-all-files)))
+
 (use-package dumb-jump
   :ensure t
   :bind (("C-c g" . 'dumb-jump-go)
   	 ("C-c b" . 'dumb-jump-back)
 	 ("C-c q" . 'dumb-jump-quick-look)))
+
+(use-package telephone-line
+  :ensure t
+  :config (setq telephone-line-primary-left-separator   'telephone-line-gradient
+		telephone-line-secondary-left-separator  'telephone-line-cubed-left
+		telephone-line-primary-right-separator   'telephone-line-cubed-left
+		telephone-line-secondary-right-separator 'telephone-line-cubed-left)
+  	  (setq telephone-line-height 24
+		telephone-line-evil-use-short-tag t)
+	  (setq telephone-line-lhs
+		'((nil . (telephone-line-buffer-segment
+			  telephone-line-minor-mode-segment
+			  telephone-line-nyan-segment))))
+	  (telephone-line-mode 1))
 
 (use-package nyan-mode
   :ensure t
@@ -118,13 +147,10 @@
   	   (nyan-start-animation)
   	   (nyan-toggle-wavy-trail))
 
-(use-package powerline
-  :ensure t
-  :config (powerline-default-theme))
-
 (use-package smartparens
   :ensure t
-  :config (smartparens-global-strict-mode))
+  :config (smartparens-global-mode)
+	  (show-smartparens-global-mode))
 
 (use-package helm
   :ensure t
@@ -132,7 +158,10 @@
 	 ("C-s"		. 'helm-occur)
 	 ("C-x C-h"	. 'helm-man-woman)
 	 ("C-x b"	. 'helm-mini)
-	 ("M-x"		. 'helm-M-x)))
+	 ("M-x"		. 'helm-M-x)
+	 ("C-h r"	. 'helm-register)
+	 ("C-x B"	. 'helm-bookmarks)
+	 ("C-x c"	. 'helm-calcul-expression)))
 
 (use-package magit
   :ensure t
@@ -158,7 +187,11 @@
 
 (use-package flycheck
   :ensure t
-  :config (global-flycheck-mode))
+  :config (global-flycheck-mode)
+  	  (global-unset-key (kbd "C-c ! n"))
+	  (global-unset-key (kbd "C-c ! p"))
+  :bind	  (("C-h n" . flycheck-next-error)
+	   ("C-h p" . flycheck-previous-error)))
 
 (use-package yasnippet
 	     :ensure t
@@ -201,7 +234,7 @@
 (global-set-key (kbd "C-c C-a")	'recompile)
 
 ;;; --------------------------------------------------
-;;;; mode hooks
+;;;; mode hooks & context-specific stuff
 ;;; --------------------------------------------------
 ;;; --------------------------------------------------
 ;;; C
