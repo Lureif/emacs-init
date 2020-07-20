@@ -67,8 +67,8 @@
 ;;; --------------------------------------------------
 ;;; Themes
 ;;; --------------------------------------------------
-;;(load-theme 'base16-spacemacs t)
-(load-theme 'minsk t)
+(load-theme 'base16-spacemacs t)
+;;(load-theme 'minsk t)
 ;;(load-theme 'base16-pop t)		;; v dark much blackness
 ;;(load-theme 'base16-rebecca)		;; purple
 ;;(load-theme 'base16-cupcake)		;; purple-ish + white (v kawaii)
@@ -185,11 +185,12 @@
   :ensure t
   :config (global-company-mode))
 
+(global-unset-key (kbd "C-c ! n"))
+(global-unset-key (kbd "C-c ! p"))
+
 (use-package flycheck
   :ensure t
-  :config (global-flycheck-mode)
-  	  (global-unset-key (kbd "C-c ! n"))
-	  (global-unset-key (kbd "C-c ! p"))
+  :init (global-flycheck-mode)
   :bind	  (("C-h n" . flycheck-next-error)
 	   ("C-h p" . flycheck-previous-error)))
 
