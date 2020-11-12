@@ -13,7 +13,7 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (add-to-list
-   'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t))
+   'package-archives '("melpa" . "http://melpa.org/packages/") t))
 
 ;;; --------------------------------------------------
 ;;; custom-set-variables
@@ -27,6 +27,7 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
 (require 'use-package)
 (setq use-package-always-ensure t)
 
@@ -38,7 +39,6 @@
 (toggle-scroll-bar -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (defvar c-default-style "linux")
-(defvar inferior-lisp-program "sbcl")
 (setq inhibit-startup-message t
       initial-buffer-choice 'eshell)
 
@@ -57,41 +57,19 @@
 (global-set-key (kbd "C-c p") 'parenthesize)
 
 ;;; --------------------------------------------------
-;;;; Aesthetics
-;;; --------------------------------------------------
-;;; Font
-;;; --------------------------------------------------
-;; (add-to-list 'default-frame-alist
-;; 	     '(font . "-ADBO-Source Code Pro-semibold-italic-normal-*-*-*-*-*-m-0-iso10646-1"))
-
-;;; --------------------------------------------------
-;;; Themes
-;;; --------------------------------------------------
-(load-theme 'base16-spacemacs t)
-;;(load-theme 'minsk t)
-;;(load-theme 'base16-pop t)		;; v dark much blackness
-;;(load-theme 'base16-rebecca)		;; purple
-;;(load-theme 'base16-cupcake)		;; purple-ish + white (v kawaii)
-;;(select-theme)
-
-;;; --------------------------------------------------
 ;;;; Generic editing stuff
 ;;; --------------------------------------------------
 ;;; Editing
 ;;; --------------------------------------------------
 
 (global-set-key (kbd "M-;")	'comment-or-uncomment-region)
-(global-set-key (kbd "C-c C-c") 'comment-line)
 (global-set-key (kbd "M-$") 	'query-replace)
 
 ;;; --------------------------------------------------
 ;;; Movement
 ;;; --------------------------------------------------
-;; --- setting
+;; --- REGISTERS
 
-(global-set-key (kbd "C-x j") 'ace-jump-mode)
-(global-set-key (kbd "C-x l") 'ace-jump-line-mode)
-(global-set-key (kbd "C-x o") 'ace-window)
 (global-set-key (kbd "M-3")   'point-to-register)
 (global-set-key (kbd "C-3")   'jump-to-register)
 
@@ -100,44 +78,47 @@
 
 (global-unset-key (kbd "C-x r SPC"))
 (global-unset-key (kbd "C-x r j"))
+(global-unset-key (kbd "C-c ! n"))
+(global-unset-key (kbd "C-c ! p"))
+
 ;; c-u c-spc jumps.
 
 ;;; --------------------------------------------------
 ;;;; Misc
 ;;; --------------------------------------------------
 (global-set-key (kbd "C-c C-e C-b") 'eval-buffer)
-(global-set-key (kbd "C-c C-x C-q") (lambda () (interactive) (kill-emacs)))
-
-;;; --------------------------------------------------
-;;; unsetting key bingings
-;;; --------------------------------------------------
-(global-unset-key (kbd "C-x C-c"))
+(global-set-key (kbd "M-g M-c")	    'save-buffers-kill-emacs)
+;;(global-set-key (kbd "C-c C-q") (lambda () (interactive) (kill-emacs)))
 
 ;;; --------------------------------------------------
 ;;;; Plugins
 ;;; --------------------------------------------------
+
+(use-package gruvbox-theme
+  :ensure t
+  :config (load-theme 'gruvbox-dark-hard t))
+
 (use-package basic-c-compile
   :ensure t
   :bind (("C-c C-m C-m" . 'basic-c-compile-makefile) ;; should output message. message in lambda?
 	 ("C-c C-m C-c" . 'basic-c-compile-all-files)))
 
-(use-package dumb-jump
+(use-package xref
   :ensure t
-  :bind (("C-c g" . 'dumb-jump-go)
-  	 ("C-c b" . 'dumb-jump-back)
-	 ("C-c q" . 'dumb-jump-quick-look)))
+  :bind (("M-." . 'xref-find-definitions)
+	 ("M-," . 'xref-pop-marker-stack)
+	 ("M-?" . 'xref-find-references)))
 
 (use-package telephone-line
   :ensure t
-  :config (setq telephone-line-primary-left-separator   'telephone-line-gradient
-		telephone-line-secondary-left-separator  'telephone-line-cubed-left
-		telephone-line-primary-right-separator   'telephone-line-cubed-left
+  :config (setq ;;telephone-line-primary-left-separator   'telephone-line-abs-hollow-left
+		telephone-line-secondary-left-separator  'telephone-line-abs-hollow-right
+		telephone-line-primary-right-separator   'telephone-line-cos-left
 		telephone-line-secondary-right-separator 'telephone-line-cubed-left)
   	  (setq telephone-line-height 24
 		telephone-line-evil-use-short-tag t)
 	  (setq telephone-line-lhs
 		'((nil . (telephone-line-buffer-segment
-			  telephone-line-minor-mode-segment
 			  telephone-line-nyan-segment))))
 	  (telephone-line-mode 1))
 
@@ -163,6 +144,12 @@
 	 ("C-x B"	. 'helm-bookmarks)
 	 ("C-x c"	. 'helm-calcul-expression)))
 
+(use-package ace-window
+  :ensure t)
+
+(use-package ace-jump-mode
+  :ensure t)
+
 (use-package magit
   :ensure t
   :bind (("C-; C-d" . 'magit-diff)
@@ -184,9 +171,6 @@
 (use-package company
   :ensure t
   :config (global-company-mode))
-
-(global-unset-key (kbd "C-c ! n"))
-(global-unset-key (kbd "C-c ! p"))
 
 (use-package flycheck
   :ensure t
@@ -223,15 +207,11 @@
   :config
   (setq org-journal-dir "~/.org/journal"))
 
-(use-package cider
-  :ensure t)
-
 ;;; --------------------------------------------------
 ;;;; Misc. binding
 ;;; --------------------------------------------------
 (global-set-key (kbd "C-c C-v") 'browse-url)
 (global-set-key (kbd "C-c C-k") 'browse-kill-ring)
-(global-set-key (kbd "M-!")	(lambda () (interactive) (shell-command "dmenu_run")))
 (global-set-key (kbd "C-c C-a")	'recompile)
 
 ;;; --------------------------------------------------
